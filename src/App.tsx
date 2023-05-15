@@ -12,17 +12,18 @@ const App = () => {
 
   useEffect(() => {
     axios.get("http://localhost:3001/notes").then((response) => {
-      console.log(response.data);
+      setNotes(response.data as Note[]);
     });
   }, []);
 
   const noteCreation = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    const noteToAdd = {
-      content: newNote,
-      id: notes.length + 1,
-    };
-    setNotes(notes.concat(noteToAdd));
+    axios
+      .post<Note>("http://localhost:3001/notes", { content: newNote })
+      .then((response) => {
+        setNotes(notes.concat(response.data));
+      });
+
     setNewNote("");
   };
 
